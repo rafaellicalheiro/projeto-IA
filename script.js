@@ -145,3 +145,18 @@ document.addEventListener("DOMContentLoaded", () => {
     caixaPrincipal.classList.add('show');
     mostrarPergunta(indiceAtual);
 });
+const musica = document.getElementById('musicaFundo');
+const botaoMusica = document.getElementById('botao-musica');
+let tocando = false;
+
+botaoMusica.addEventListener('click', () => {
+    if (tocando) {
+        musica.pause();
+        botaoMusica.textContent = '♫';
+    } else {
+        musica.play();
+        botaoMusica.textContent = '▮▮';
+    }
+    tocando = !tocando;
+});
+
