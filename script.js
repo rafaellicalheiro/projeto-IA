@@ -110,41 +110,50 @@ let indiceAtual = 0;
 
 function mostrarPergunta(indice) {
     const pergunta = perguntas[indice];
-    caixaPerguntas.innerHTML = `<p>${pergunta.texto}</p>`;
-    caixaAlternativas.innerHTML = '';
+    caixaPrincipal.classList.remove('show');
+    setTimeout(() => {
+        caixaPerguntas.innerHTML = `<p>${pergunta.texto}</p>`;
+        caixaAlternativas.innerHTML = '';
 
-    pergunta.opcoes.forEach(opcao => {
-        const botao = document.createElement('button');
-        botao.textContent = opcao.texto;
-        botao.onclick = () => {
-            caixaPrincipal.classList.remove('show');
-            setTimeout(() => {
-                if (perguntas[opcao.proxima].opcoes.length === 0) {
-                    mostrarResultado(perguntas[opcao.proxima].texto);
+        pergunta.opcoes.forEach(opcao => {
+            const botao = document.createElement('button');
+            botao.textContent = opcao.texto;
+            botao.onclick = () => {
+                if (perguntas[opcao.proxima]) {
+                    if (perguntas[opcao.proxima].opcoes.length === 0) {
+                        mostrarResultado(perguntas[opcao.proxima].texto);
+                    } else {
+                        mostrarPergunta(opcao.proxima);
+                    }
                 } else {
-                    mostrarPergunta(opcao.proxima);
-                    caixaPrincipal.classList.add('show');
+                    mostrarResultado("Fim desconhecido. Caminho inválido.");
                 }
-            }, 300);
-        };
-        caixaAlternativas.appendChild(botao);
-    });
+            };
+            caixaAlternativas.appendChild(botao);
+        });
+        caixaPrincipal.classList.add('show');
+    }, 300);
 }
 
 function mostrarResultado(textoFinal) {
     caixaPerguntas.innerHTML = '';
     caixaAlternativas.innerHTML = '';
     textoResultado.textContent = textoFinal;
+    caixaResultado.innerHTML = '';
+    caixaResultado.appendChild(textoResultado);
+
     const botaoReiniciar = document.createElement('button');
     botaoReiniciar.textContent = "Recomeçar";
     botaoReiniciar.onclick = () => location.reload();
     caixaResultado.appendChild(botaoReiniciar);
+    caixaPrincipal.classList.add('show');
 }
 
 document.addEventListener("DOMContentLoaded", () => {
     caixaPrincipal.classList.add('show');
     mostrarPergunta(indiceAtual);
 });
+
 const musica = document.getElementById('musicaFundo');
 const botaoMusica = document.getElementById('botao-musica');
 let tocando = false;
@@ -159,4 +168,5 @@ botaoMusica.addEventListener('click', () => {
     }
     tocando = !tocando;
 });
+
 
